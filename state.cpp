@@ -76,13 +76,13 @@ static int endian = 0x01020304;
 void
 rs_write(FILE *savef, const void *ptr, size_t size)
 {
-    encwrite(ptr, size, savef);
+    encwrite((const char *)ptr, size, savef);
 }
 
 void
 rs_read(FILE *savef, void *ptr, size_t size)
 {
-    encread(ptr, size, savef);
+    encread((char *)ptr, size, savef);
 }
 
 void
@@ -272,7 +272,7 @@ rs_read_new_string(FILE *savef, char **s)
         buf = NULL;
     else
     { 
-        buf = malloc(len);
+        buf = (char *)malloc(len);
 
         if (buf == NULL)            
             encseterr(ENOMEM);
@@ -939,7 +939,7 @@ rs_read_object_reference(FILE *savef, THING *list, THING **item)
     rs_read_int(savef, &i);
 
     if (!encerror())
-	*item = get_list_item(list,i);
+	*item = (THING *)get_list_item(list,i);
     else
 	*item = NULL;
 }
@@ -1136,7 +1136,7 @@ rs_read_thing(FILE *savef, THING *t)
     {
         THING *obj;
 
-        item = get_list_item(lvl_obj, index);
+        item = (THING *)get_list_item(lvl_obj, index);
 
         if (item != NULL)
         {
@@ -1166,7 +1166,7 @@ rs_fix_thing(THING *t)
     if (t->t_reserved < 0)
         return;
 
-    item = get_list_item(mlist,t->t_reserved);
+    item = (THING *)get_list_item(mlist,t->t_reserved);
 
     if (item != NULL)
     {
@@ -1267,7 +1267,7 @@ rs_read_thing_reference(FILE *savef, THING *list, THING **item)
     if (i == -1)
         *item = NULL;
     else
-        *item = get_list_item(list,i);
+        *item = (THING *)get_list_item(list,i);
 
 }
 

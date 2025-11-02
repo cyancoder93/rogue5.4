@@ -23,8 +23,9 @@ static coord ch_ret;				/* Where chasing takes you */
  *	Make all the running monsters move.
  */
 void
-runners(void)
+runners(int arg)
 {
+    (void)arg;  // Unused parameter
     THING *tp;
     THING *next;
     int wastarget;
@@ -120,7 +121,7 @@ do_chase(THING *th)
     int stoprun = FALSE;	/* TRUE means we are there */
     int door;
     THING *obj;
-    coord this;			/* Temporary destination for chaser */
+    coord self;			/* Temporary destination for chaser */
 
     rer = th->t_room;		/* Find room of chaser */
     if (on(*th, ISGREED) && rer->r_goldval == 0)
@@ -146,7 +147,7 @@ over:
 	    curdist = dist_cp(th->t_dest, cp);
 	    if (curdist < mindist)
 	    {
-		this = *cp;
+		self = *cp;
 		mindist = curdist;
 	    }
 	}
@@ -159,7 +160,7 @@ over:
     }
     else
     {
-	this = *th->t_dest;
+	self = *th->t_dest;
 	/*
 	 * For dragons check and see if (a) the hero is on a straight
 	 * line from it, and (b) that it is within shooting distance,
@@ -191,13 +192,13 @@ over:
      * so we run to it.  If we hit it we either want to fight it
      * or stop running
      */
-    if (!chase(th, &this))
+    if (!chase(th, &self))
     {
-	if (ce(this, hero))
+	if (ce(self, hero))
 	{
 	    return( attack(th) );
 	}
-	else if (ce(this, *th->t_dest))
+	else if (ce(self, *th->t_dest))
 	{
 	    for (obj = lvl_obj; obj != NULL; obj = next(obj))
 		if (th->t_dest == &obj->o_pos)

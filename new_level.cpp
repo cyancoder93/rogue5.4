@@ -97,7 +97,7 @@ new_level(void)
     if (on(player, SEEMONST))
 	turn_see(FALSE);
     if (on(player, ISHALU))
-	visuals();
+	visuals(0);
 }
 
 /*

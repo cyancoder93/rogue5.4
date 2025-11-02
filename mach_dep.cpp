@@ -97,9 +97,9 @@ open_score(void)
     Numname = NUMNAME;
 
 #ifdef ALLSCORES
-    allscore = TRUE;
+    allscore = true;
 #else  /* ALLSCORES */
-    allscore = FALSE;
+    allscore = false;
 #endif /* ALLSCORES */
 
      /* 
@@ -107,25 +107,25 @@ open_score(void)
       * open()'s will fail.  Just reuse the earlier filehandle. 
       */
 
-    if (scoreboard != NULL) { 
+    if (scoreboard != nullptr) { 
         rewind(scoreboard); 
         return; 
     } 
 
     scoreboard = fopen(scorefile, "r+");
 
-    if ((scoreboard == NULL) && (errno == ENOENT))
+    if ((scoreboard == nullptr) && (errno == ENOENT))
     {
     	scoreboard = fopen(scorefile, "w+");
         md_chmod(scorefile,0664);
     }
 
-    if (scoreboard == NULL) { 
+    if (scoreboard == nullptr) { 
          fprintf(stderr, "Could not open %s for writing: %s\n", scorefile, strerror(errno)); 
          fflush(stderr); 
     } 
 #else
-    scoreboard = NULL;
+    scoreboard = nullptr;
 #endif
 }
 
@@ -137,7 +137,7 @@ open_score(void)
 void
 getltchars(void)
 {
-    got_ltc = TRUE;
+    got_ltc = true;
     orig_dsusp = md_dsuspchar();
     md_setdsuspchar( md_suspchar() );
 }
@@ -209,18 +209,18 @@ start_score(void)
  *      See if the file has a symbolic link 	 	 
   */ 	 	 
 int	 	 
-is_symlink(char *sp) 	 	 
+is_symlink(const char *sp) 	 	 
 { 	 	 
 #ifdef S_IFLNK 	 	 
     struct stat sbuf2; 	 	 
  	 	 
     if (lstat(sp, &sbuf2) < 0) 	 	 
-        return FALSE; 	 	 
+        return false; 	 	 
     else 	 	 
         return ((sbuf2.st_mode & S_IFMT) != S_IFREG); 	 	 
 #else
 	NOOP(sp);
-    return FALSE; 	 	 
+    return false; 	 	 
 #endif 
 } 
 
@@ -241,13 +241,13 @@ too_much(void)
 #ifdef MAXLOAD
     md_loadav(avec);
     if (avec[1] > (MAXLOAD / 10.0))
-	return TRUE;
+	return true;
 #endif
 #ifdef MAXUSERS
     if (ucount() > MAXUSERS)
-	return TRUE;
+	return true;
 #endif
-    return FALSE;
+    return false;
 }
 
 /*
@@ -259,14 +259,14 @@ author(void)
 {
 #ifdef MASTER
     if (wizard)
-	return TRUE;
+	return true;
 #endif
     switch (md_getuid())
     {
 	case -1:
-	    return TRUE;
+	    return true;
 	default:
-	    return FALSE;
+	    return false;
     }
 }
 #endif
@@ -347,7 +347,7 @@ ucount(void)
     FILE *utmp;
     int count;
 
-    if ((utmp = fopen(UTMP, "r")) == NULL)
+    if ((utmp = fopen(UTMP, "r")) == nullptr)
 	return 0;
 
     up = &buf;
@@ -366,7 +366,7 @@ ucount(void)
  *	lock the score file.  If it takes too long, ask the user if
  *	they care to wait.  Return TRUE if the lock is successful.
  */
-static FILE *lfd = NULL;
+static FILE *lfd = nullptr;
 int
 lock_sc(void)
 {
@@ -376,23 +376,23 @@ lock_sc(void)
     char *lockfile = LOCKFILE;
 
 over:
-    if ((lfd=fopen(lockfile, "w+")) != NULL)
-	return TRUE;
+    if ((lfd=fopen(lockfile, "w+")) != nullptr)
+	return true;
     for (cnt = 0; cnt < 5; cnt++)
     {
 	md_sleep(1);
-	if ((lfd=fopen(lockfile, "w+")) != NULL)
-	    return TRUE;
+	if ((lfd=fopen(lockfile, "w+")) != nullptr)
+	    return true;
     }
     if (stat(lockfile, &sbuf) < 0)
     {
 	lfd=fopen(lockfile, "w+");
-	return TRUE;
+	return true;
     }
-    if (time(NULL) - sbuf.st_mtime > 10)
+    if (time(nullptr) - sbuf.st_mtime > 10)
     {
 	if (md_unlink(lockfile) < 0)
-	    return FALSE;
+	    return false;
 	goto over;
     }
     else
@@ -405,24 +405,24 @@ over:
 	    for (;;)
 	    {
 		if ((lfd=fopen(lockfile, "w+")) != 0)
-		    return TRUE;
+		    return true;
 		if (stat(lockfile, &sbuf) < 0)
 		{
 		    lfd=fopen(lockfile, "w+");
-		    return TRUE;
+		    return true;
 		}
-		if (time(NULL) - sbuf.st_mtime > 10)
+		if (time(nullptr) - sbuf.st_mtime > 10)
 		{
 		    if (md_unlink(lockfile) < 0)
-			return FALSE;
+			return false;
 		}
 		md_sleep(1);
 	    }
 	else
-	    return FALSE;
+	    return false;
     }
 #else
-    return TRUE;
+    return true;
 #endif
 }
 
@@ -435,9 +435,9 @@ void
 unlock_sc(void)
 {
 #if defined(SCOREFILE) && defined(LOCKFILE)
-    if (lfd != NULL)
+    if (lfd != nullptr)
         fclose(lfd);
-    lfd = NULL;
+    lfd = nullptr;
     md_unlink(LOCKFILE);
 #endif
 }

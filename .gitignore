@@ -2,3 +2,4 @@ build/
 *.o
 *.scr
 rogue
+.vs/

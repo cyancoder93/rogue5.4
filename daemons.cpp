@@ -18,8 +18,9 @@
  *	A healing daemon that restors hit points after rest
  */
 void
-doctor(void)
+doctor(int arg)
 {
+    (void)arg;  // Unused parameter
     int lv, ohp;
 
     lv = pstats.s_lvl;
@@ -50,8 +51,9 @@ doctor(void)
  *	Called when it is time to start rolling for wandering monsters
  */
 void
-swander(void)
+swander(int arg)
 {
+    (void)arg;  // Unused parameter
     start_daemon(rollwand, 0, BEFORE);
 }
 
@@ -61,8 +63,9 @@ swander(void)
  */
 
 void
-rollwand(void)
+rollwand(int arg)
 {
+    (void)arg;  // Unused parameter
 
     if (++between >= 4)
     {
@@ -81,8 +84,9 @@ rollwand(void)
  *	Release the poor player from his confusion
  */
 void
-unconfuse(void)
+unconfuse(int arg)
 {
+    (void)arg;  // Unused parameter
     player.t_flags &= ~ISHUH;
     msg("you feel less %s now", choose_str("trippy", "confused"));
 }
@@ -92,8 +96,9 @@ unconfuse(void)
  *	Turn off the ability to see invisible
  */
 void
-unsee(void)
+unsee(int arg)
 {
+    (void)arg;  // Unused parameter
     THING *th;
 
     for (th = mlist; th != NULL; th = next(th))
@@ -107,8 +112,9 @@ unsee(void)
  *	He gets his sight back
  */
 void
-sight(void)
+sight(int arg)
 {
+    (void)arg;  // Unused parameter
     if (on(player, ISBLIND))
     {
 	extinguish(sight);
@@ -125,8 +131,9 @@ sight(void)
  *	End the hasting
  */
 void
-nohaste(void)
+nohaste(int arg)
 {
+    (void)arg;  // Unused parameter
     player.t_flags &= ~ISHASTE;
     msg("you feel yourself slowing down");
 }
@@ -136,8 +143,9 @@ nohaste(void)
  *	Digest the hero's food
  */
 void
-stomach(void)
+stomach(int arg)
 {
+    (void)arg;  // Unused parameter
     int oldfood;
     int orig_hungry = hungry_state;
 
@@ -191,8 +199,9 @@ stomach(void)
  *	Take the hero down off her acid trip.
  */
 void
-come_down(void)
+come_down(int arg)
 {
+    (void)arg;  // Unused parameter
     THING *tp;
     int seemonst;
 
@@ -239,8 +248,9 @@ come_down(void)
  *	change the characters for the player
  */
 void
-visuals(void)
+visuals(int arg)
 {
+    (void)arg;  // Unused parameter
     THING *tp;
     int seemonst;
 
@@ -287,8 +297,9 @@ visuals(void)
  *	Land from a levitation potion
  */
 void
-land(void)
+land(int arg)
 {
+    (void)arg;  // Unused parameter
     player.t_flags &= ~ISLEVIT;
     msg(choose_str("bummer!  You've hit the ground",
 		   "you float gently to the ground"));

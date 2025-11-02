@@ -17,7 +17,7 @@
 typedef struct PACT
 {
     const int pa_flags;
-    void (*pa_daemon)();
+    void (*pa_daemon)(int);
     const int pa_time;
     const char *pa_high, *pa_straight;
 } PACT;
@@ -30,7 +30,7 @@ static const PACT p_actions[] =
 	{ ISHALU,	come_down,	SEEDURATION,	/* P_LSD */
 		"Oh, wow!  Everything seems so cosmic!",
 		"Oh, wow!  Everything seems so cosmic!" },
-	{ 0,		NULL,	0 },			/* P_POISON */
+	{ 0,		nullptr,	0 },			/* P_POISON */
 	{ 0,		NULL,	0 },			/* P_STRENGTH */
 	{ CANSEE,	unsee,	SEEDURATION,		/* P_SEEINVIS */
 		prbuf,
@@ -97,13 +97,13 @@ quaff(void)
 	    {
 		chg_str(-(rnd(3) + 1));
 		msg("you feel very sick now");
-		come_down();
+		come_down(0);
 	    }
 	when P_HEALING:
 	    pot_info[P_HEALING].oi_know = TRUE;
 	    if ((pstats.s_hpt += roll(pstats.s_lvl, 4)) > max_hp)
 		pstats.s_hpt = ++max_hp;
-	    sight();
+	    sight(0);
 	    msg("you begin to feel better");
 	when P_STRENGTH:
 	    pot_info[P_STRENGTH].oi_know = TRUE;
@@ -111,7 +111,7 @@ quaff(void)
 	    msg("you feel stronger, now.  What bulging muscles!");
 	when P_MFIND:
 	    player.t_flags |= SEEMONST;
-	    fuse((void(*)())turn_see, TRUE, HUHDURATION, AFTER);
+	    fuse(turn_see_daemon, TRUE, HUHDURATION, AFTER);
 	    if (!turn_see(FALSE))
 		msg("you have a %s feeling for a moment, then it passes",
 		    choose_str("normal", "strange"));
@@ -169,7 +169,7 @@ quaff(void)
 	    do_pot(P_SEEINVIS, FALSE);
 	    if (!show)
 		invis_on();
-	    sight();
+	    sight(0);
 	when P_RAISE:
 	    pot_info[P_RAISE].oi_know = TRUE;
 	    msg("you suddenly feel much more skillful");
@@ -182,8 +182,8 @@ quaff(void)
 		    ++max_hp;
 		pstats.s_hpt = ++max_hp;
 	    }
-	    sight();
-	    come_down();
+	    sight(0);
+	    come_down(0);
 	    msg("you begin to feel much better");
 	when P_HASTE:
 	    pot_info[P_HASTE].oi_know = TRUE;
@@ -261,6 +261,16 @@ invis_on(void)
     for (mp = mlist; mp != NULL; mp = next(mp))
 	if (on(*mp, ISINVIS) && see_monst(mp) && !on(player, ISHALU))
 	    mvaddch(mp->t_pos.y, mp->t_pos.x, mp->t_disguise);
+}
+
+/*
+ * turn_see_daemon:
+ *	Daemon function wrapper for turn_see
+ */
+void
+turn_see_daemon(int turn_off)
+{
+    turn_see(turn_off);
 }
 
 /*

@@ -99,11 +99,11 @@ new_item(void)
 {
     THING *item;
 
-	if ((item = calloc(1, sizeof *item)) == NULL) {
+	if ((item = (THING*)calloc(1, sizeof *item)) == nullptr) {
 #ifdef MASTER
 		msg("ran out of memory after %d items", total);
 #endif
-		return NULL;
+		return nullptr;
 	}
 
 #ifdef MASTER

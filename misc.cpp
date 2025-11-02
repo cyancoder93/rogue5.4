@@ -559,10 +559,10 @@ call_it(struct obj_info *info)
 	msg(terse ? "call it: " : "what do you want to call it? ");
 	if (get_str(prbuf, stdscr) == NORM)
 	{
-	    if (info->oi_guess != NULL)
+	    if (info->oi_guess != nullptr)
 		free(info->oi_guess);
-	    info->oi_guess = malloc(strlen(prbuf) + 1);
-		if (info->oi_guess != NULL)
+	    info->oi_guess = (char*)malloc(strlen(prbuf) + 1);
+		if (info->oi_guess != nullptr)
 			strcpy(info->oi_guess, prbuf);
 	}
 	msg("");

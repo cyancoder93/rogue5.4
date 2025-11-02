@@ -788,9 +788,9 @@ norm:
     {
 	if (*guess != NULL)
 	    free(*guess);
-	*guess = malloc(strlen(prbuf) + 1);
+	*guess = (char*)malloc(strlen(prbuf) + 1);
 	if (*guess != NULL)
-		strcpy(*guess, prbuf);
+	    strcpy(*guess, prbuf);
     }
 
     msg("");

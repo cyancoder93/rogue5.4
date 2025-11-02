@@ -13,7 +13,7 @@
 #include <curses.h>
 #include <string.h>
 #include "rogue.h"
-#include <ctype.h>
+//#include <ctype.h>
 
 /*
  * List of monsters in rough order of vorpalness

@@ -105,6 +105,8 @@ typedef unsigned int pid_t;
  */
 
 #include <stdlib.h>
+#include <curses.h>
+#include <stdio.h>
 
 #undef SIGTSTP
 

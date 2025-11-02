@@ -87,7 +87,7 @@ score(int amount, int flags, int monst)
 	    delwin(hw);
     }
 
-    top_ten = malloc(numscores * sizeof (SCORE));
+    top_ten = (SCORE*)malloc(numscores * sizeof (SCORE));
 
 	if (top_ten == NULL)
 		return;

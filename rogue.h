@@ -10,6 +10,22 @@
  * See the file LICENSE.TXT for full copyright and licensing information.
  */
 
+ // define FALSE to false or 0 depending on compiler
+#ifndef FALSE
+#ifdef __cplusplus
+#define FALSE	false
+#else
+#define FALSE	0
+#endif
+#endif
+#ifndef TRUE
+#ifdef __cplusplus
+#define TRUE true
+#else
+#define TRUE	1
+#endif
+#endif
+
 #include "extern.h"
 
 #undef lines 
@@ -461,7 +477,7 @@ struct monster {
 
 struct delayed_action {
     int d_type;
-    void (*d_func)();
+    void (*d_func)(int);
     int d_arg;
     int d_time;
 };
@@ -493,8 +509,13 @@ extern char file_name[], home[], huh[], *Numname, outbuf[],
 	    *ws_type[], *s_names[];
 
 extern const char *ws_made[], *inv_t_name[], *p_colors[], *r_stones[], 
-                  *release, *tr_name[], *rainbow[], *wood[], *metal[],
-		  encstr[], statlist[], version[];
+                  *tr_name[], *rainbow[], *wood[], *metal[];
+extern "C" {
+extern char *release;
+extern char encstr[];
+extern char statlist[];
+extern char version[];
+}
 
 extern const int a_class[], e_levels[];
 
@@ -555,7 +576,7 @@ void	chg_str(int amt);
 void	check_level(void);
 const char *choose_str(const char *ts, const char *ns);
 void	conn(int r1, int r2);
-void	come_down(void);
+void	come_down(int arg);
 void	command(void);
 void	create_obj(void);
 void	current(const THING *cur, const char *how, const char *where);
@@ -580,7 +601,7 @@ void	do_rooms(void);
 void	do_run(int ch);
 void	do_zap(void);
 void	doadd(const char *fmt, va_list args);
-void	doctor(void);
+void	doctor(int arg);
 void	door(struct room *rm, const coord *cp);
 void	door_open(const struct room *rp);
 void	drain(void);
@@ -590,7 +611,7 @@ int 	dropcheck(const THING *obj);
 void	eat(void);
 int     encclearerr();
 int     encerror();
-void    encseterr();
+void    encseterr(int err);
 size_t  encread(char *start, size_t size, FILE *inf);
 size_t	encwrite(const char *start, size_t size, FILE *outf);
 void    end_line(void);
@@ -599,7 +620,7 @@ int	endmsg(void);
 void	enter_room(const coord *cp);
 void	erase_lamp(const coord *pos, const struct room *rp);
 int	exp_add(const THING *tp);
-void	extinguish(void (*func)());
+void	extinguish(void (*func)(int));
 void	fall(THING *obj, int pr);
 int	fallpos(const coord *pos, coord *newpos);
 void	fatal(const char *s);
@@ -612,7 +633,7 @@ int 	find_floor(const struct room *rp, coord *cp, int limit, int monst);
 THING   *find_obj(int y, int x);
 int	fight(const coord *mp, const THING *weap, int thrown);
 void	fix_stick(THING *cur);
-void	fuse(void (*func)(), int arg, int time, int type);
+void	fuse(void (*func)(int), int arg, int time, int type);
 int	get_bool(void *vp, WINDOW *win);
 int	get_dir(void);
 int	get_inv_t(void *vp, WINDOW *win);
@@ -627,7 +648,7 @@ void	help(void);
 void	hit(const char *er, const char *ee, int noend);
 void	horiz(const struct room *rp, int starty);
 void	leave_room(const coord *cp);
-void	lengthen(void (*func)(), int xtime);
+void	lengthen(void (*func)(int), int xtime);
 void	look(int wakeup);
 int	hit_monster(int y, int x, const THING *obj);
 void	identify(void);
@@ -646,10 +667,10 @@ void	invis_on(void);
 int	is_current(const THING *obj);
 int 	is_magic(const THING *obj);
 int     is_symlink(const char *sp); 
-void	kill_daemon(void (*func)());
+void	kill_daemon(void (*func)(int));
 void	killed(THING *tp, int pr);
 const char *killname(int monst, int doart);
-void	land(void);
+void	land(int arg);
 void    leave(int);
 THING   *leave_pack(THING *obj, int newobj, int all);
 int 	levit_check(void);
@@ -666,7 +687,7 @@ THING   *new_item(void);
 void	new_level(void);
 void	new_monster(THING *tp, int type, const coord *cp);
 THING   *new_thing(void);
-void	nohaste(void);
+void	nohaste(int arg);
 const char *nothing(int type);
 const char *nullstr(const THING *ignored);
 const char *num(int n1, int n2, int type);
@@ -713,11 +734,11 @@ int	rnd_thing(void);
 coord	rndmove(const THING *who);
 int	roll(int number, int sides);
 int	roll_em(const THING *thatt, THING *thdef, const THING *weap, int hurl);
-void	rollwand(void);
+void	rollwand(int arg);
 struct room *roomin(const coord *cp);
 int	rs_save_file(FILE *savef);
 int	rs_restore_file(FILE *inf);
-void	runners(void);
+void	runners(int arg);
 void	runto(const coord *runner);
 void	rust_armor(THING *arm);
 int	save(int which);
@@ -737,16 +758,16 @@ void	shell(void);
 int 	show_floor(void);
 void	show_map(void);
 void	show_win(const char *message);
-void	sight(void);
+void	sight(int arg);
 int	sign(int nm);
 int	spread(int nm);
-void	start_daemon(void (*func)(), int arg, int type);
+void	start_daemon(void (*func)(int), int arg, int type);
 void	start_score(void);
 void	status(void);
 int	step_ok(int ch);
-void	stomach(void);
+void	stomach(int arg);
 void	strucpy(char *s1, const char *s2, size_t len);
-void	swander(void);
+void	swander(int arg);
 int	swing(int at_lvl, int op_arm, int wplus);
 void	take_off(void);
 void	teleport(void);
@@ -757,15 +778,16 @@ int	trip_ch(int y, int x, int ch);
 void	tstp(int ignored);
 int     turn_ok(int y, int x);
 int	turn_see(int turn_off);
+void	turn_see_daemon(int arg);
 void	turnref(void);
 const char *type_name(int type);
 void	u_level(void);
-void	unconfuse(void);
+void	unconfuse(int arg);
 void	uncurse(THING *obj);
 void	unlock_sc(void);
-void	unsee(void);
+void	unsee(int arg);
 void	vert(const struct room *rp, int startx);
-void	visuals(void);
+void	visuals(int arg);
 char	*vowelstr(const char *str);
 void	wait_for(WINDOW *win, int ch);
 const THING *wake_monster(int y, int x);

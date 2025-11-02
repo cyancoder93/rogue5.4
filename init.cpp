@@ -284,8 +284,8 @@ init_names(void)
 	    *cp++ = ' ';
 	}
 	*--cp = '\0';
-	s_names[i] = malloc(strlen(prbuf)+1);
-	if (s_names[i] != NULL)
+	s_names[i] = (char*)malloc(strlen(prbuf)+1);
+	if (s_names[i] != nullptr)
 		strcpy(s_names[i], prbuf);
     }
 }
